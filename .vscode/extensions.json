@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.atom-keybindings", // If you love Atom keybindings
+    "ms-vscode.vscode-typescript-tslint-plugin"
+  ]
+}

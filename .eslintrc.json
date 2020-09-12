@@ -1,0 +1,35 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "browser": false,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "no-console": 1, // Means warning
+    "semi": ["error", "always"],
+    "quotes": ["error", "double"],
+    "prettier/prettier": 2, // Means error,
+    "eqeqeq": 1,
+    "require-await": "error",
+    "strict": "error",
+    "no-undefined": "error",
+    "no-unused-vars": "error",
+    "comma-dangle": "error",
+    "eol-last": "error",
+    "no-var": "error",
+    "no-const-assign": "error"
+  }
+}

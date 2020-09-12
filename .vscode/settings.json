@@ -1,0 +1,6 @@
+{
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "eslint.workingDirectories": ["src/**/*"],
+  "eslint.validate": ["javascript", "typescript"]
+}
