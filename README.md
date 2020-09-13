@@ -11,7 +11,15 @@ Nutrition Client API for BBSays
 ### Creating the Enviornment Variables
 
 1. Add a `.env` file under `src/settings`
-2. Add the following environment variables: `HOST`, `PORT`
+2. Add the following environment variables:
+
+- `HOST`
+- `PORT`
+- `DB_USER`
+- `DB_HOST`
+- `DB_DATABASE`
+- `DB_PASSWORD`
+- `DB_PORT`
 
 ### Starting the Dev Server
 
