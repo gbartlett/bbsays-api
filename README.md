@@ -21,6 +21,9 @@ Nutrition Client API for BBSays
 - `DB_PASSWORD`
 - `DB_PORT`
 
+### Starting the Postgres
+1. From the root directory, run `docker-compose up`
+
 ### Starting the Dev Server
 
 1. Run `npm run build` (You only need to do this if you don't have a dist directory)
