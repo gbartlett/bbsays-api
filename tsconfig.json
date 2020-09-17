@@ -3,7 +3,9 @@
     "moduleResolution": "node",
     "target": "es6",
     "module": "commonjs",
-    "lib": ["esnext"],
+    "lib": [
+      "esnext"
+    ],
     "strict": true,
     "sourceMap": true,
     "declaration": true,
@@ -13,8 +15,18 @@
     "emitDecoratorMetadata": true,
     "declarationDir": "./dist",
     "outDir": "./dist",
-    "typeRoots": ["node_modules/@types", "src/types/**"]
+    "baseUrl": ".",
+    "rootDir": "src",
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types/**"
+    ]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modues"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modues",
+    "dist/"
+  ]
 }

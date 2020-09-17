@@ -3,12 +3,13 @@ import * as fs from "fs";
 import path from "path";
 
 const projectRoot = path.resolve(__dirname, "../..");
-const settings = path.join(projectRoot, "src/settings");
 
-if (fs.existsSync(`${settings}/.env`)) {
-  dotenv.config({ path: path.resolve(`${settings}/.env`) });
-} else if (fs.existsSync(path.dirname(`${settings}/.env.example`))) {
-  dotenv.config({ path: `${settings}/.env.example` });
+if (fs.existsSync(".env")) {
+  // eslint-disable-next-line no-console
+  console.log("Using local env file");
+  dotenv.config({ path: ".env", debug: true });
+} else if (fs.existsSync(path.dirname(`${projectRoot}/.env.example`))) {
+  dotenv.config({ path: `${projectRoot}/.env.example` });
 } else {
   throw new Error("No .env file found");
 }

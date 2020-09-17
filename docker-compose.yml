@@ -3,12 +3,13 @@ services:
   postgres:
     image: postgres:12.4-alpine
     ports:
-      - "35432:5432"
+      - "5432:5432"
     volumes:
       - bbsays_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgress
-      POSTGRES_PASSWORD: postgress
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret-password
       POSTGRES_DB: bbsays
 volumes:
   bbsays_data:
+  # docker-compose down --remove-orphans --volumes
