@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:12.4-alpine
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - bbsays_data:/var/lib/postgresql/data
     environment:
