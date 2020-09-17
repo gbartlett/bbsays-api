@@ -1,8 +1,11 @@
 require("./settings/initEnv");
 import express from "express";
+import { graphQLServer } from "./apolloServer";
 import { DB } from "./db/client";
 
 const app = express();
+
+graphQLServer.applyMiddleware({ app });
 
 app.get("/healthcheck", async (req, res) => {
   try {

@@ -15,21 +15,42 @@
   "parserOptions": {
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier"
+  ],
   "rules": {
     "no-console": 1, // Means warning
-    "semi": ["error", "always"],
-    "quotes": ["error", "double"],
-    "prettier/prettier": 2, // Means error,
+    "max-len": [
+      2,
+      120,
+      4
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "quotes": [
+      "error",
+      "double"
+    ],
+    "prettier/prettier": "error", // Means error,
     "eqeqeq": 1,
     "require-await": "error",
     "strict": "error",
     "no-undefined": "error",
     "no-unused-vars": "off",
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
     "eol-last": "error",
     "no-var": "error",
     "no-const-assign": "error",
+    "indent": [
+      "error",
+      2
+    ],
     "@typescript-eslint/no-namespace": [
       "error",
       {

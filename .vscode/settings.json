@@ -1,6 +1,8 @@
 {
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
   "eslint.workingDirectories": [
     "src/**/*"
   ],
@@ -10,5 +12,6 @@
   "javascript.format.enable": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
