@@ -47,7 +47,7 @@ export const userResolvers = {
     ): Promise<UserNoPWD> => {
       const user = await authUser(args.email, args.raw_password);
       if (!user) {
-        throw new Error("Could not find user");
+        throw new Error("Invalid credentials");
       }
       return user;
     },
