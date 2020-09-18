@@ -39,13 +39,14 @@ export const getUserById = async (
 export const setUserPassword = async (
   rawPwd: string,
   userId: string | number
-): Promise<void> => {
-  const queryText =
-    "UPDATE users SET pwd_hash = SELECT crypt($1, gen_salt('bf')) WHERE id = $2";
-  await DB.query<UserNoPWD, [string, number | string]>(queryText, [
-    rawPwd,
-    userId,
-  ]);
+): Promise<UserNoPWD> => {
+  const queryText = `UPDATE users SET pwd_hash = crypt($1, gen_salt('bf'))
+    WHERE id = $2 RETURNING id, first_name, last_name, email`;
+  const result = await DB.query<UserNoPWD, [string, number | string]>(
+    queryText,
+    [rawPwd, userId]
+  );
+  return result.rows[0];
 };
 
 export const authUser = async (
@@ -53,7 +54,7 @@ export const authUser = async (
   rawPwd: string
 ): Promise<UserNoPWD | null> => {
   const queryText =
-    "SELECT id, first_name, last_name, email FROM users WHERE email = $1 and pwd_hash = crypt($2, password)";
+    "SELECT id, first_name, last_name, email FROM users WHERE email = $1 and pwd_hash = crypt($2, pwd_hash)";
 
   const result = await DB.query<UserNoPWD, [string, string]>(queryText, [
     email,
