@@ -26,6 +26,7 @@
   "homepage": "https://github.com/gbartlett/bbsays-api#readme",
   "devDependencies": {
     "@types/express": "4.17.8",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/lodash.merge": "^4.6.6",
     "@types/node": "14.10.1",
     "@types/pg": "7.14.4",
@@ -45,7 +46,9 @@
     "dotenv": "8.2.0",
     "express": "4.17.1",
     "graphql": "^15.3.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash.merge": "^4.6.2",
-    "pg": "8.3.3"
+    "pg": "8.3.3",
+    "rand-token": "^1.0.1"
   }
 }

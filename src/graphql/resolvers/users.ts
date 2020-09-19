@@ -14,6 +14,7 @@ import {
   UserNoPWD,
 } from "../../db/users";
 import { validateRole } from "../utils/authMiddleware";
+import { generateToken } from "../../jwt";
 
 export const userResolvers = {
   Query: {
@@ -23,7 +24,6 @@ export const userResolvers = {
     clients: validateRole<UserNoPWD, { id: string }, GraphQLContext>(
       ROLES.COACH
     )((_, args) => {
-      console.log("HEY");
       return getClients(args.id);
     }),
     getUser: validateRole<UserNoPWD, { id: string }, GraphQLContext>(
@@ -46,14 +46,13 @@ export const userResolvers = {
   },
   Mutation: {
     createUser: (
-      root: never,
-      args: Omit<User, "id" | "pwd_hash">,
-      context: GraphQLContext
+      _: never,
+      args: Omit<User, "id" | "pwd_hash">
     ): Promise<UserNoPWD> => {
       return insertUser(args);
     },
     setPassword: (
-      root: never,
+      _: never,
       args: { raw_password: string; id: string },
       context: GraphQLContext
     ): Promise<UserNoPWD> => {
@@ -63,15 +62,23 @@ export const userResolvers = {
       return setUserPassword(args.raw_password, args.id);
     },
     login: async (
-      root: never,
-      args: { email: string; raw_password: string },
-      context: GraphQLContext
-    ): Promise<UserNoPWD> => {
+      _: never,
+      args: { email: string; raw_password: string }
+    ): Promise<string> => {
       const user = await authUser(args.email, args.raw_password);
+      let token: string;
+
       if (!user) {
         throw new Error("Invalid credentials");
       }
-      return user;
+
+      try {
+        token = generateToken(user);
+      } catch (error) {
+        throw new Error("Invalid credentials");
+      }
+
+      return token;
     },
   },
 };

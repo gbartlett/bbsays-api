@@ -1,3 +1,4 @@
+import { getFieldsAndValuesForUpdate } from "../utils/getFieldsAndValues";
 import { DB } from "./client";
 
 export enum ROLES {
@@ -6,11 +7,19 @@ export enum ROLES {
 }
 
 export interface User {
-  id: number;
+  readonly id: number;
   first_name: string;
   last_name: string;
   email: string;
+  role: ROLES;
   pwd_hash: string;
+}
+
+export enum UPDATABLE_PROPERTIES {
+  first_name = "first_name",
+  last_name = "last_name",
+  email = "email",
+  role = "role",
 }
 
 export type UserNoPWD = Omit<User, "pwd_hash">;
@@ -25,6 +34,24 @@ export const insertUser = async (
     [user.first_name, user.last_name, user.email]
   );
 
+  return result.rows[0];
+};
+
+export const updateUser = async (
+  userId: string | number,
+  payload: Omit<UserNoPWD, "id">
+): Promise<UserNoPWD> => {
+  const { fields, values, nextParamIndex } = getFieldsAndValuesForUpdate(
+    Object.keys(UPDATABLE_PROPERTIES),
+    payload
+  );
+  const queryText = `UPDATE users SET ${fields.join(
+    ", "
+  )} WHERE id = ${nextParamIndex}`;
+  const result = await DB.query<UserNoPWD, any[]>(queryText, [
+    ...values,
+    userId,
+  ]);
   return result.rows[0];
 };
 
@@ -46,7 +73,7 @@ export const setUserPassword = async (
   userId: string | number
 ): Promise<UserNoPWD> => {
   const queryText = `UPDATE users SET pwd_hash = crypt($1, gen_salt('bf'))
-    WHERE id = $2 RETURNING id, first_name, last_name, email`;
+  WHERE id = $2 RETURNING id, first_name, last_name, email`;
   const result = await DB.query<UserNoPWD, [string, number | string]>(
     queryText,
     [rawPwd, userId]

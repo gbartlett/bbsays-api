@@ -34,6 +34,7 @@ const CUSTOM_ENV_VARS_REQ = [
   "DB_DATABASE",
   "DB_PASSWORD",
   "DB_PORT",
+  "JWT_SECRET",
 ];
 
 const missingVars: string[] = CUSTOM_ENV_VARS_REQ.reduce((missing, envVar) => {
