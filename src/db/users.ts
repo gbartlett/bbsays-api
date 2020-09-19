@@ -68,3 +68,12 @@ export const authUser = async (
 
   return result.rowCount === 1 ? result.rows[0] : null;
 };
+
+export const getClients = async (coachId: string): Promise<UserNoPWD[]> => {
+  const queryText =
+    "SELECT id, first_name, last_name, email FROM users WHERE coach_id = $1";
+  const result = await DB.query<UserNoPWD, [string | number]>(queryText, [
+    coachId,
+  ]);
+  return result.rows;
+};

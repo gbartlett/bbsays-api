@@ -4,6 +4,7 @@ export const userTypeDefs = gql`
   extend type Query {
     me: User!
     getUser(id: ID!): User!
+    clients(id: ID!): [User!]!
   }
 
   extend type Mutation {
