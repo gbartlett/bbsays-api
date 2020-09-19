@@ -1,5 +1,10 @@
 import { DB } from "./client";
 
+export enum ROLES {
+  COACH = "COACH",
+  CLIENT = "CLIENT",
+}
+
 export interface User {
   id: number;
   first_name: string;

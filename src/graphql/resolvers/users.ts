@@ -1,29 +1,43 @@
 import { GraphQLContext } from "src/apolloServer";
 import {
+  isCoachForClient,
+  isRequestingOwnData,
+} from "src/utils/userAuthHelpers";
+import {
   authUser,
   getUserById,
   insertUser,
+  ROLES,
   setUserPassword,
   User,
   UserNoPWD,
 } from "../../db/users";
+import { validateRole } from "../utils/authMiddleware";
 
 export const userResolvers = {
   Query: {
     me: (root: never, args: null, context: GraphQLContext): UserNoPWD => {
       return context.user;
     },
-    getUser: async (
-      root: never,
-      args: { id: number },
-      context: GraphQLContext
-    ): Promise<UserNoPWD> => {
-      const user = await getUserById(args.id);
-      if (!user) {
-        throw new Error("Could not find user");
+    getUser: validateRole<UserNoPWD, { id: string }, GraphQLContext>(
+      ROLES.COACH
+    )(
+      async (_, args, context): Promise<UserNoPWD> => {
+        const user = await getUserById(args.id);
+        if (!user) {
+          throw new Error("Could not find user");
+        }
+
+        if (
+          !isCoachForClient(context.user.id, user.id) ||
+          !isRequestingOwnData(parseInt(args.id, 10), context.user.id)
+        ) {
+          throw new Error("Cannot access this user");
+        }
+
+        return user;
       }
-      return user;
-    },
+    ),
   },
   Mutation: {
     createUser: (
