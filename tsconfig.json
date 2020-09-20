@@ -1,32 +1,32 @@
 {
-  "compilerOptions": {
-    "moduleResolution": "node",
-    "target": "es6",
-    "module": "commonjs",
-    "lib": [
-      "esnext"
-    ],
-    "strict": true,
-    "sourceMap": true,
-    "declaration": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "declarationDir": "./dist",
-    "outDir": "./dist",
-    "baseUrl": ".",
-    "rootDir": "src",
-    "typeRoots": [
-      "node_modules/@types",
-      "src/types/**"
-    ]
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modues",
-    "dist/"
-  ]
+	"compilerOptions": {
+		"moduleResolution": "node",
+		"target": "es6",
+		"module": "commonjs",
+		"lib": [
+			"esnext"
+		],
+		"strict": true,
+		"sourceMap": true,
+		"declaration": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"declarationDir": "./dist",
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"rootDir": "src",
+		"typeRoots": [
+			"node_modules/@types",
+			"src/types/**"
+		]
+	},
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modues",
+		"dist/"
+	]
 }

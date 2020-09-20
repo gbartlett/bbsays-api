@@ -4,16 +4,19 @@ import resolvers from "./graphql/resolvers";
 import { ApolloServer, makeExecutableSchema } from "apollo-server-express";
 
 export interface GraphQLContext {
-  user: UserNoPWD;
+	user: UserNoPWD;
 }
 
 const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
+	typeDefs,
+	resolvers,
 });
 
 export const graphQLServer = new ApolloServer({
-  typeDefs,
-  resolvers,
-  schema,
+	typeDefs,
+	resolvers,
+	schema,
+	context: (expressCtx) => {
+		return {};
+	},
 });
