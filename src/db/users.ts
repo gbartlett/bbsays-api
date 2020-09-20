@@ -12,6 +12,7 @@ export interface User {
 	last_name: string;
 	email: string;
 	role: ROLES;
+	coach_id: number;
 	pwd_hash: string;
 }
 
@@ -59,7 +60,7 @@ export const getUserById = async (
 	id: string | number
 ): Promise<UserNoPWD | null> => {
 	const queryText =
-		"SELECT id, first_name, last_name, email FROM users WHERE id = $1";
+		"SELECT id, first_name, last_name, email, role, coach_id FROM users WHERE id = $1";
 	const result = await DB.query<UserNoPWD, [number | string]>(queryText, [id]);
 
 	if (!result.rowCount) {
@@ -86,7 +87,8 @@ export const authUser = async (
 	rawPwd: string
 ): Promise<UserNoPWD | null> => {
 	const queryText =
-		"SELECT id, first_name, last_name, email FROM users WHERE email = $1 and pwd_hash = crypt($2, pwd_hash)";
+		"SELECT id, first_name, last_name, email, role, coach_id \
+		FROM users WHERE email = $1 and pwd_hash = crypt($2, pwd_hash)";
 
 	const result = await DB.query<UserNoPWD, [string, string]>(queryText, [
 		email,

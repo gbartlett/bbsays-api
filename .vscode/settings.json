@@ -1,18 +1,18 @@
 {
-  "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
-  "editor.tabSize": 2,
-  "editor.insertSpaces": false,
-  "editor.detectIndentation": false,
-  "eslint.workingDirectories": [
-    "src/**/*"
-  ],
-  "eslint.validate": [
-    "javascript"
-  ],
-  "javascript.format.enable": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "typescript.tsdk": "node_modules/typescript/lib"
+	"editor.formatOnPaste": true,
+	"editor.formatOnSave": true,
+	"editor.tabSize": 2,
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"eslint.workingDirectories": [
+		"src/**/*"
+	],
+	"eslint.validate": [
+		"javascript"
+	],
+	"javascript.format.enable": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -8,41 +8,44 @@ import {
 	getClients,
 	getUserById,
 	insertUser,
-	ROLES,
 	setUserPassword,
 	User,
 	UserNoPWD,
 } from "../../db/users";
-import { validateRole } from "../utils/authMiddleware";
 import { generateToken } from "../../jwt";
 
 export const userResolvers = {
 	Query: {
 		me: (root: never, args: null, context: GraphQLContext): UserNoPWD => {
+			if (!context.user) {
+				throw new Error("User is not authenticated");
+			}
 			return context.user;
 		},
-		clients: validateRole<UserNoPWD, { id: string }, GraphQLContext>(
-			ROLES.COACH
-		)((_, args) => {
+		clients: (_: never, args: { id: string }): Promise<UserNoPWD[]> => {
 			return getClients(args.id);
-		}),
-		getUser: validateRole<UserNoPWD, { id: string }, GraphQLContext>(
-			ROLES.COACH
-		)(async (_, args, context) => {
+		},
+		getUser: async (
+			_: never,
+			args: { id: string },
+			context: GraphQLContext
+		): Promise<UserNoPWD> => {
 			const user = await getUserById(args.id);
+
 			if (!user) {
 				throw new Error("Could not find user");
 			}
 
 			if (
-				!isCoachForClient(context.user.id, user.id) ||
-				!isRequestingOwnData(parseInt(args.id, 10), context.user.id)
+				!context.user ||
+				(!isCoachForClient(context.user.id, user.coach_id) &&
+					!isRequestingOwnData(parseInt(args.id, 10), context.user.id))
 			) {
 				throw new Error("Cannot access this user");
 			}
 
 			return user;
-		}),
+		},
 	},
 	Mutation: {
 		createUser: (
@@ -56,7 +59,10 @@ export const userResolvers = {
 			args: { raw_password: string; id: string },
 			context: GraphQLContext
 		): Promise<UserNoPWD> => {
-			if (!isRequestingOwnData(context.user.id, parseInt(args.id))) {
+			if (
+				!context.user ||
+				!isRequestingOwnData(context.user.id, parseInt(args.id))
+			) {
 				throw new Error("Unauthorized");
 			}
 			return setUserPassword(args.raw_password, args.id);

@@ -47,6 +47,7 @@
 		"express": "4.17.1",
 		"express-fingerprint": "^1.2.2",
 		"graphql": "15.3.0",
+		"graphql-middleware": "^4.0.2",
 		"jsonwebtoken": "8.5.1",
 		"lodash.merge": "4.6.2",
 		"pg": "8.3.3",

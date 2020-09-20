@@ -6,6 +6,7 @@ export interface JwtPayload {
 }
 
 export const generateToken = (user: UserNoPWD): string => {
+	console.log(typeof user.id);
 	return jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "15min" });
 };
 
