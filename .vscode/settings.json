@@ -1,16 +1,37 @@
 {
-	"editor.formatOnPaste": true,
-	"editor.formatOnSave": true,
-	"editor.tabSize": 2,
-	"editor.insertSpaces": false,
-	"editor.detectIndentation": false,
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"html"
+	],
 	"eslint.workingDirectories": [
 		"src/**/*"
 	],
-	"eslint.validate": [
-		"javascript"
-	],
-	"javascript.format.enable": true,
+	"files.watcherExclude": {
+		"**/.git/objects/**": true,
+		"**/.git/subtree-cache/**": true,
+		"**/node_modules/**": true
+	},
+	"search.exclude": {
+		"**/node_modules": true,
+		"**/bower_components": true,
+		"packages/**/dist/**": true,
+		"**/coverge": true
+	},
+	"editor.tabSize": 2,
+	"editor.renderWhitespace": "boundary",
+	"editor.scrollBeyondLastColumn": 20,
+	"javascript.format.enable": false,
+	"javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+	"javascript.preferences.quoteStyle": "double",
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+	"typescript.preferences.importModuleSpecifier": "relative",
+	"files.insertFinalNewline": true,
+	"editor.suggestSelection": "first",
+	"typescript.preferences.quoteStyle": "double",
+	"editor.formatOnSave": false,
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": true
 	},

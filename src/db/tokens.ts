@@ -9,20 +9,20 @@ interface RefreshTokenData {
 }
 
 export const getRefreshTokensForUser = async (
-  userId: string | number
+  userId: string | number,
 ): Promise<RefreshTokenData[]> => {
   const queryText =
     "SELECT id, user_id, token, fingerprint FROM refresh_tokens WHERE user_id = $1";
   const result = await DB.query<RefreshTokenData, [string | number]>(
     queryText,
-    [userId]
+    [userId],
   );
   return result.rows;
 };
 
 export const createRefreshTokenForUser = async (
   userId: string | number,
-  fingerprint: string
+  fingerprint: string,
 ): Promise<string> => {
   const refreshToken = uid(16);
   const currentTokens = await getRefreshTokensForUser(userId);
@@ -37,7 +37,7 @@ export const createRefreshTokenForUser = async (
         "DELETE FROM refresh_tokens WHERE user_id = $1 WHERE user_id = $1";
       const result = await client.query<RefreshTokenData, [string | number]>(
         queryText,
-        [userId]
+        [userId],
       );
 
       if (result.rowCount < numCurrentTokens) {
@@ -47,7 +47,7 @@ export const createRefreshTokenForUser = async (
 
     await client.query(
       "INSERT INTO refresh_tokens(user_id, token, fingerprint)  VALUES($1, $2, $3",
-      [userId, refreshToken, fingerprint]
+      [userId, refreshToken, fingerprint],
     );
   } catch (error) {
     await client.query<any, []>("ROLLBACK", []);

@@ -8,28 +8,28 @@ import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 import { validateToken } from "./jwt";
 
 export interface GraphQLContext {
-	user?: UserNoPWD;
+  user?: UserNoPWD;
 }
 
 const getGraphQLContext = (expressCtx: ExpressContext): GraphQLContext => {
-	if (expressCtx.req.headers.authorization) {
-		const decoded = validateToken(expressCtx.req.headers.authorization);
-		return { user: decoded.user };
-	}
+  if (expressCtx.req.headers.authorization) {
+    const decoded = validateToken(expressCtx.req.headers.authorization);
+    return { user: decoded.user };
+  }
 
-	return {};
+  return {};
 };
 
 const schema = makeExecutableSchema({
-	typeDefs,
-	resolvers,
+  typeDefs,
+  resolvers,
 });
 
 const schemaWithMiddleware = applyMiddleware(schema, authMiddleware);
 
 export const graphQLServer = new ApolloServer({
-	typeDefs,
-	resolvers,
-	schema: schemaWithMiddleware,
-	context: getGraphQLContext,
+  typeDefs,
+  resolvers,
+  schema: schemaWithMiddleware,
+  context: getGraphQLContext,
 });
