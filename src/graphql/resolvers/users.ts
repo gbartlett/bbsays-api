@@ -66,7 +66,7 @@ export const userResolvers = {
 
       return user;
     },
-    setPassword: (
+    setPassword: async (
       _: never,
       args: { password: string; id: string },
       context: GraphQLContext,
@@ -77,7 +77,14 @@ export const userResolvers = {
       ) {
         throw new Error("Unauthorized");
       }
-      return setUserPassword(args.password, args.id);
+
+      const user = await setUserPassword(args.password, args.id);
+
+      if (!user) {
+        throw new Error("Users password could not be updated");
+      }
+
+      return user;
     },
     login: async (
       _: never,

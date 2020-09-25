@@ -120,13 +120,29 @@ export const getUserById = async (
 export const setUserPassword = async (
   rawPwd: string,
   userId: string | number,
-): Promise<UserNoPWD> => {
+): Promise<UserNoPWD | undefined> => {
   const queryText = `UPDATE users SET pwd_hash = crypt($1, gen_salt('bf'))
   WHERE id = $2 RETURNING id, first_name, last_name, email`;
-  const result = await DB.query<UserNoPWD, [string, number | string]>(
-    queryText,
-    [rawPwd, userId],
-  );
+
+  let result;
+
+  try {
+    result = await DB.query<UserNoPWD, [string, number | string]>(queryText, [
+      rawPwd,
+      userId,
+    ]);
+  } catch (error) {
+    logger.error("An error occured while updating users password", {
+      error,
+      userId,
+    });
+  }
+
+  if (!result?.rowCount) {
+    logger.info("Password not updated", { userId });
+    return;
+  }
+
   return result.rows[0];
 };
 
