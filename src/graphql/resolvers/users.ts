@@ -12,7 +12,7 @@ import {
   User,
   UserNoPWD,
 } from "../../db/users";
-import { generateToken } from "../../jwt";
+import { AuthenticationError } from "apollo-server-express";
 
 export const userResolvers = {
   Query: {
@@ -22,8 +22,14 @@ export const userResolvers = {
       }
       return context.user;
     },
-    clients: (_: never, args: { id: string }): Promise<UserNoPWD[]> => {
-      return getClients(args.id);
+    clients: async (_: never, args: { id: string }): Promise<UserNoPWD[]> => {
+      const clients = await getClients(args.id);
+
+      if (!clients) {
+        throw new Error("An error occured while fetching clients");
+      }
+
+      return clients;
     },
     getUser: async (
       _: never,
@@ -48,15 +54,21 @@ export const userResolvers = {
     },
   },
   Mutation: {
-    createUser: (
+    createUser: async (
       _: never,
       args: Omit<User, "id" | "pwd_hash">,
     ): Promise<UserNoPWD> => {
-      return insertUser(args);
+      const user = await insertUser(args);
+
+      if (!user) {
+        throw new Error("User could not be created");
+      }
+
+      return user;
     },
     setPassword: (
       _: never,
-      args: { raw_password: string; id: string },
+      args: { password: string; id: string },
       context: GraphQLContext,
     ): Promise<UserNoPWD> => {
       if (
@@ -65,26 +77,19 @@ export const userResolvers = {
       ) {
         throw new Error("Unauthorized");
       }
-      return setUserPassword(args.raw_password, args.id);
+      return setUserPassword(args.password, args.id);
     },
     login: async (
       _: never,
-      args: { email: string; raw_password: string },
-    ): Promise<string> => {
-      const user = await authUser(args.email, args.raw_password);
-      let token: string;
+      args: { email: string; password: string },
+    ): Promise<{ token: string; refreshToken: string }> => {
+      const authResult = await authUser(args.email, args.password);
 
-      if (!user) {
-        throw new Error("Invalid credentials");
+      if (!authResult) {
+        throw new AuthenticationError("Invalid credentials");
       }
 
-      try {
-        token = generateToken(user);
-      } catch (error) {
-        throw new Error("Invalid credentials");
-      }
-
-      return token;
+      return { token: authResult.token, refreshToken: authResult.refreshToken };
     },
   },
 };

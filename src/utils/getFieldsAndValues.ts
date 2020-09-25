@@ -17,7 +17,7 @@ export const getFieldsAndValuesForUpdate = (
 
   for (const field of whitelistedFields) {
     if (Object.prototype.hasOwnProperty.call(payload, field)) {
-      fieldNames.push(`${field} = ${paramIndex++}`);
+      fieldNames.push(`${field} = $${paramIndex++}`);
       fieldValues.push(payload[field]);
     }
   }
