@@ -22,7 +22,7 @@ export const userResolvers = {
       }
       return context.user;
     },
-    clients: async (_: never, args: { id: string }): Promise<UserNoPWD[]> => {
+    clients: async (_: null, args: { id: string }): Promise<UserNoPWD[]> => {
       const clients = await getClients(args.id);
 
       if (!clients) {

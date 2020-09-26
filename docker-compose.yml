@@ -10,16 +10,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret-password
       POSTGRES_DB: bbsays
-  test:
-    image: node:14.11.0-alpine3.10
-    build:
-      context: .
+  postgres-test:
+     image: postgres:12.4-alpine
+     ports:
+      - 5432:5432
     volumes:
-      - "./src:/app/src"
-      - "./test:/app/test"
-    environment: 
-      - CI=true
-    command: npm test
+      - bbsays_test_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret-password
+      POSTGRES_DB: bbsays
+
         
 volumes:
   bbsays_data:

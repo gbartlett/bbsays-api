@@ -28,4 +28,15 @@ describe.only("User Resolvers", () => {
       }).toThrow(AuthenticationError);
     });
   });
+
+  describe("clients", () => {
+    it("returns clients", async (done) => {
+      const clients = await userResolvers.Query.clients(null, {
+        id: contextUser.id.toString(),
+      });
+
+      expect(clients).toHaveLength(1);
+      done();
+    });
+  });
 });
