@@ -16,9 +16,9 @@ import { AuthenticationError } from "apollo-server-express";
 
 export const userResolvers = {
   Query: {
-    me: (root: never, args: null, context: GraphQLContext): UserNoPWD => {
+    me: (root: null, args: null, context: GraphQLContext): UserNoPWD => {
       if (!context.user) {
-        throw new Error("User is not authenticated");
+        throw new AuthenticationError("User is not authenticated");
       }
       return context.user;
     },

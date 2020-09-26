@@ -10,6 +10,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret-password
       POSTGRES_DB: bbsays
+  test:
+    image: node:14.11.0-alpine3.10
+    build:
+      context: .
+    volumes:
+      - "./src:/app/src"
+      - "./test:/app/test"
+    environment: 
+      - CI=true
+    command: npm test
+        
 volumes:
   bbsays_data:
   # docker-compose down --remove-orphans --volumes
