@@ -15,7 +15,7 @@ export interface User {
   last_name: string;
   email: string;
   role: ROLES;
-  coach_id: number;
+  coach_id: number | null;
   pwd_hash: string;
   refresh_token: string;
 }
