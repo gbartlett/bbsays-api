@@ -9,8 +9,8 @@ export const userTypeDefs = gql`
 
   extend type Mutation {
     createUser(first_name: String!, last_name: String!, email: String!): User!
-    setPassword(password: String!, id: ID!): User!
-    login(email: String!, password: String): LoginResult!
+    setPassword(password: String!, id: ID!): TokensResult!
+    login(email: String!, password: String): TokensResult!
   }
 
   type User {
@@ -20,8 +20,8 @@ export const userTypeDefs = gql`
     email: String!
   }
 
-  type LoginResult {
-    token: String!
+  type TokensResult {
+    jwtToken: String!
     refreshToken: String!
   }
 `;

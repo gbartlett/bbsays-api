@@ -44,7 +44,8 @@ export const userResolvers = {
 
       if (
         !context.user ||
-        (!isCoachForClient(context.user.id, user.coach_id) &&
+        (user.coach_id &&
+          !isCoachForClient(context.user.id, user.coach_id) &&
           !isRequestingOwnData(parseInt(args.id, 10), context.user.id))
       ) {
         throw new Error("Cannot access this user");
@@ -70,7 +71,7 @@ export const userResolvers = {
       _: never,
       args: { password: string; id: string },
       context: GraphQLContext,
-    ): Promise<UserNoPWD> => {
+    ): Promise<{ jwtToken: string; refreshToken: string }> => {
       if (
         !context.user ||
         !isRequestingOwnData(context.user.id, parseInt(args.id))
@@ -78,25 +79,25 @@ export const userResolvers = {
         throw new Error("Unauthorized");
       }
 
-      const user = await setUserPassword(args.password, args.id);
+      const setPwdResult = await setUserPassword(args.password, args.id);
 
-      if (!user) {
+      if (!setPwdResult) {
         throw new Error("Users password could not be updated");
       }
 
-      return user;
+      return { ...setPwdResult };
     },
     login: async (
       _: never,
       args: { email: string; password: string },
-    ): Promise<{ token: string; refreshToken: string }> => {
+    ): Promise<{ jwtToken: string; refreshToken: string }> => {
       const authResult = await authUser(args.email, args.password);
 
       if (!authResult) {
         throw new AuthenticationError("Invalid credentials");
       }
 
-      return { token: authResult.token, refreshToken: authResult.refreshToken };
+      return { ...authResult };
     },
   },
 };

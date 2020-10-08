@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { generateToken } from "../jwt";
+import { generateJWTAndRefreshToken, generateToken } from "../jwt";
 import { getFieldsAndValuesForUpdate } from "../utils/getFieldsAndValues";
 import logger from "../utils/logger";
 import { DB } from "./client";
@@ -28,7 +28,7 @@ export enum UPDATABLE_PROPERTIES {
   refresh_token = "refresh_token",
 }
 
-export type UserNoPWD = Omit<User, "pwd_hash">;
+export type UserNoPWD = Omit<User, "pwd_hash" | "refresh_token">;
 
 export const insertUser = async (
   user: Omit<User, "id" | "pwd_hash">,
@@ -63,7 +63,7 @@ export const insertUser = async (
 
 export const updateUser = async (
   userId: string | number,
-  payload: Partial<User>,
+  payload: Partial<User> & { refresh_token: string },
 ): Promise<UserNoPWD | undefined> => {
   const { fields, values, nextParamIndex } = getFieldsAndValuesForUpdate(
     Object.keys(UPDATABLE_PROPERTIES),
@@ -117,10 +117,11 @@ export const getUserById = async (
   return result.rows[0];
 };
 
+// TODO: this should be inside of a transaction
 export const setUserPassword = async (
   rawPwd: string,
   userId: string | number,
-): Promise<UserNoPWD | undefined> => {
+): Promise<{ jwtToken: string; refreshToken: string } | undefined> => {
   const queryText = `UPDATE users SET pwd_hash = crypt($1, gen_salt('bf'))
   WHERE id = $2 RETURNING id, first_name, last_name, email`;
 
@@ -136,6 +137,7 @@ export const setUserPassword = async (
       error,
       userId,
     });
+    return;
   }
 
   if (!result?.rowCount) {
@@ -143,15 +145,21 @@ export const setUserPassword = async (
     return;
   }
 
-  return result.rows[0];
+  const user = result.rows[0];
+  const { jwtToken, refreshToken } = generateJWTAndRefreshToken(user);
+  const update = await updateUser(user.id, { refresh_token: refreshToken });
+
+  if (!update) {
+    return;
+  }
+
+  return { jwtToken, refreshToken };
 };
 
 export const authUser = async (
   email: string,
   rawPwd: string,
-): Promise<
-  { user: UserNoPWD; token: string; refreshToken: string } | undefined
-> => {
+): Promise<{ jwtToken: string; refreshToken: string } | undefined> => {
   const queryText =
     "SELECT id, first_name, last_name, email, role, coach_id \
     FROM users WHERE email = $1 and pwd_hash = crypt($2, pwd_hash)";
@@ -177,15 +185,14 @@ export const authUser = async (
     return;
   }
   const user = result.rows[0];
-  const refreshToken = uuidv4();
+  const { jwtToken, refreshToken } = generateJWTAndRefreshToken(user);
   const userId = await updateUser(user.id, { refresh_token: refreshToken });
 
   if (!userId) {
     return;
   }
 
-  const token = generateToken(user);
-  return { user, token, refreshToken };
+  return { jwtToken, refreshToken };
 };
 
 export const getClients = async (
